@@ -2,18 +2,18 @@ from random import randint
 
 from typing import Annotated
 
-from annotated_types import Len
-
 from fastapi import (
     Depends,
     APIRouter,
     status,
-    Form,
 )
 
 from .crud import MOVIES
 from .dependencies import prefetch_movie
-from schemas.movie import Movie
+from schemas.movie import (
+    Movie,
+    MovieCreate,
+)
 
 router = APIRouter(
     prefix="/movies",
@@ -34,18 +34,13 @@ def read_movies_list():
     response_model=Movie,
     status_code=status.HTTP_201_CREATED,
 )
-def create_movie(
-    title: Annotated[str, Len(min_length=8, max_length=50), Form()],
-    description: Annotated[str, Form()],
-    year: Annotated[int, Form()],
-    duration: Annotated[int, Form()],
-) -> Movie:
+def create_movie(movie_create: MovieCreate) -> Movie:
     return Movie(
         id=randint(4, 100),
-        title=title,
-        description=description,
-        year=year,
-        duration=duration,
+        title=movie_create.title,
+        description=movie_create.description,
+        year=movie_create.year,
+        duration=movie_create.duration,
     )
 
 
