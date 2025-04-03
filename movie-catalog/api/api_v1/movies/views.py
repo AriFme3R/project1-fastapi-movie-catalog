@@ -1,5 +1,3 @@
-from random import randint
-
 from typing import Annotated
 
 from fastapi import (
@@ -36,16 +34,12 @@ def read_movies_list():
 )
 def create_movie(movie_create: MovieCreate) -> Movie:
     return Movie(
-        id=randint(4, 100),
-        title=movie_create.title,
-        description=movie_create.description,
-        year=movie_create.year,
-        duration=movie_create.duration,
+        **movie_create.model_dump(),
     )
 
 
 @router.get(
-    "/{movie_id}/",
+    "/{slug}/",
     response_model=Movie,
 )
 def read_movie_details(

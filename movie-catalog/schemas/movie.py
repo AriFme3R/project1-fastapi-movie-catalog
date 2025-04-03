@@ -6,14 +6,14 @@ from pydantic import BaseModel
 
 
 class MovieBase(BaseModel):
-    id: int | None = None
+    slug: str | None = None
     title: str
     description: str
     year: int
     duration: int
 
 
-class MovieCreate(BaseModel):
+class MovieCreate(MovieBase):
     """Модель для создания фильма"""
 
     title: Annotated[str, Len(min_length=8, max_length=50)]
