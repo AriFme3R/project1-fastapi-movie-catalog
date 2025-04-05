@@ -43,9 +43,22 @@ def create_movie(
     response_model=Movie,
 )
 def read_movie_details(
-    movie_details: Annotated[
+    movie: Annotated[
         Movie,
         Depends(prefetch_movie),
     ],
 ) -> Movie:
-    return movie_details
+    return movie
+
+
+@router.delete(
+    "/{slug}/",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_movie(
+    movie: Annotated[
+        Movie,
+        Depends(prefetch_movie),
+    ],
+) -> None:
+    storage.delete(movie=movie)
