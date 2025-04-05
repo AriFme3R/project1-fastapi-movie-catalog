@@ -7,15 +7,17 @@ from annotated_types import (
 
 from pydantic import BaseModel
 
+DescriptionString = Annotated[
+    str,
+    MaxLen(500),
+]
+
 
 class MovieBase(BaseModel):
     title: str
     year: int
     duration: int
-    description: Annotated[
-        str,
-        MaxLen(500),
-    ] = ""
+    description: DescriptionString = ""
 
 
 class MovieCreate(MovieBase):
@@ -32,10 +34,18 @@ class MovieUpdate(MovieBase):
     Модель для обновления информации о фильме
     """
 
-    description: Annotated[
-        str,
-        MaxLen(200),
-    ]
+    description: DescriptionString
+
+
+class MoviePartialUpdate(MovieBase):
+    """
+    Модель для частичного обновления информации о фильме
+    """
+
+    title: str | None = None
+    year: int | None = None
+    duration: int | None = None
+    description: DescriptionString | None = None
 
 
 class Movie(MovieBase):
