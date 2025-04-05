@@ -25,7 +25,7 @@ def read_movies_list() -> list[Movie]:
 
 @router.post(
     "/",
-    response_model=Movie,
+    response_model=MovieCreate,
     status_code=status.HTTP_201_CREATED,
 )
 def create_movie(

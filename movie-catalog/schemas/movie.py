@@ -10,12 +10,12 @@ from pydantic import BaseModel
 
 class MovieBase(BaseModel):
     title: str
-    description: Annotated[
-        str,
-        MaxLen(200),
-    ] = ""
     year: int
     duration: int
+    description: Annotated[
+        str,
+        MaxLen(500),
+    ] = ""
 
 
 class MovieCreate(MovieBase):
@@ -23,21 +23,15 @@ class MovieCreate(MovieBase):
 
     slug: Annotated[
         str,
-        Len(min_length=5, max_length=50),
+        Len(min_length=3, max_length=10),
     ]
-    title: Annotated[
-        str,
-        Len(min_length=5, max_length=50),
-    ]
-    description: str
-    year: int
-    duration: int
 
 
 class MovieUpdate(MovieBase):
     """
     Модель для обновления информации о фильме
     """
+
     description: Annotated[
         str,
         MaxLen(200),
