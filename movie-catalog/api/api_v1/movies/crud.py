@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from schemas.movie import (
     Movie,
     MovieCreate,
+    MovieUpdate,
 )
 
 
@@ -15,9 +16,9 @@ class MoviesStorage(BaseModel):
     def get_by_slug(self, slug: str) -> Movie | None:
         return self.slug_to_movie.get(slug)
 
-    def create(self, movie_in: MovieCreate) -> Movie:
+    def create(self, movie: MovieCreate) -> Movie:
         movie = Movie(
-            **movie_in.model_dump(),
+            **movie.model_dump(),
         )
         self.slug_to_movie[movie.slug] = movie
         return movie
@@ -27,6 +28,15 @@ class MoviesStorage(BaseModel):
 
     def delete(self, movie: Movie) -> None:
         self.delete_by_slug(slug=movie.slug)
+
+    def update(
+        self,
+        movie: Movie,
+        movie_in: MovieUpdate,
+    ) -> Movie:
+        for field_name, value in movie_in:
+            setattr(movie, field_name, value)
+        return movie
 
 
 storage = MoviesStorage()
@@ -53,7 +63,7 @@ storage.create(
 
 storage.create(
     MovieCreate(
-        slug="Уб",
+        slug="Убл",
         title="Бесславные ублюдки",
         description="Вторая мировая война. В оккупированной немцами Франции группа американских солдат-евреев наводит страх на нацистов, жестоко убивая и скальпируя солдат.",
         year=2009,
