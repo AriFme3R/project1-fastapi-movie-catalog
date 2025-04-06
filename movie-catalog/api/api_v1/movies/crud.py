@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
+from core.config import MOVIES_STORAGE_FILEPATH
 from schemas.movie import (
     Movie,
     MovieCreate,
@@ -10,6 +11,15 @@ from schemas.movie import (
 
 class MoviesStorage(BaseModel):
     slug_to_movie: dict[str, Movie] = {}
+
+    def save_state(self):
+        MOVIES_STORAGE_FILEPATH.write_text(self.model_dump_json(indent=2))
+
+    @classmethod
+    def from_state(cls):
+        if not MOVIES_STORAGE_FILEPATH.exists():
+            return MoviesStorage()
+        return cls.model_validate_json(MOVIES_STORAGE_FILEPATH.read_text())
 
     def get(self) -> list[Movie]:
         return list(self.slug_to_movie.values())
@@ -22,10 +32,12 @@ class MoviesStorage(BaseModel):
             **movie.model_dump(),
         )
         self.slug_to_movie[movie.slug] = movie
+        self.save_state()
         return movie
 
     def delete_by_slug(self, slug: str) -> None:
         self.slug_to_movie.pop(slug, None)
+        self.save_state()
 
     def delete(self, movie: Movie) -> None:
         self.delete_by_slug(slug=movie.slug)
@@ -37,6 +49,7 @@ class MoviesStorage(BaseModel):
     ) -> Movie:
         for field_name, value in movie_in:
             setattr(movie, field_name, value)
+        self.save_state()
         return movie
 
     def update_partial(
@@ -46,37 +59,12 @@ class MoviesStorage(BaseModel):
     ) -> Movie:
         for field_name, value in movie_in.model_dump(exclude_unset=True).items():
             setattr(movie, field_name, value)
+        self.save_state()
         return movie
 
 
-storage = MoviesStorage()
-
-storage.create(
-    MovieCreate(
-        slug="Чтиво",
-        title="Криминальное чтиво",
-        description="Двое бандитов Винсент Вега и Джулс Винфилд ведут философские беседы в перерывах между разборками и решением проблем с должниками криминального босса Марселласа Уоллеса.",
-        year=1995,
-        duration=154,
-    ),
-)
-
-storage.create(
-    MovieCreate(
-        slug="Рассвет",
-        title="От заката до рассвета",
-        description="Спасаясь от полиции после ограбления банка, два брата-преступника берут в заложники священника с двумя детьми и бегут в Мексику. Там они должны дождаться подельника, а для этого всей компании нужно переждать ночь в баре дальнобойщиков.",
-        year=1995,
-        duration=108,
-    ),
-)
-
-storage.create(
-    MovieCreate(
-        slug="Убл",
-        title="Бесславные ублюдки",
-        description="Вторая мировая война. В оккупированной немцами Франции группа американских солдат-евреев наводит страх на нацистов, жестоко убивая и скальпируя солдат.",
-        year=2009,
-        duration=153,
-    ),
-)
+try:
+    storage = MoviesStorage.from_state()
+except ValidationError:
+    storage = MoviesStorage()
+    storage.save_state()
