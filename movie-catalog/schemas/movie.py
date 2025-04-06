@@ -47,10 +47,12 @@ class MoviePartialUpdate(MovieBase):
     duration: int | None = None
     description: DescriptionString | None = None
 
+
 class MovieRead(MovieBase):
     """
     Модель для чтения данных о фильме
     """
+
     slug: str
 
 
