@@ -84,4 +84,3 @@ class MoviesStorage(BaseModel):
 
 
 storage = MoviesStorage()
-storage.init_storage_from_state()
