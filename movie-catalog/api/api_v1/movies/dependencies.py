@@ -48,11 +48,15 @@ def save_storage_safe(
 
 
 def api_token_required(
+    request: Request,
     api_token: Annotated[
         str,
         Query(),
-    ],
+    ] = "",
 ):
+    if request.method not in UNSAFE_METHOD:
+        return
+
     if api_token not in API_TOKENS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
