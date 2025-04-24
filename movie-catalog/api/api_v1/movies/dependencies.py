@@ -8,6 +8,12 @@ from fastapi import (
     Header,
     status,
 )
+from fastapi.params import Depends
+
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+)
 
 from core.config import API_TOKENS
 from .crud import storage
@@ -22,6 +28,12 @@ UNSAFE_METHOD = frozenset(
         "PATCH",
         "DELETE",
     ]
+)
+
+static_api_token = HTTPBearer(
+    scheme_name="Static API Token",
+    description="Your static API token from the developer portal.",
+    auto_error=False,
 )
 
 
@@ -50,14 +62,21 @@ def save_storage_safe(
 def api_token_required(
     request: Request,
     api_token: Annotated[
-        str,
-        Header(alias="x-auth-token"),
-    ] = "",
+        HTTPAuthorizationCredentials | None,
+        Depends(static_api_token),
+    ] = None,
 ):
+    logger.info(f"API token: %s", api_token)
     if request.method not in UNSAFE_METHOD:
         return
 
-    if api_token not in API_TOKENS:
+    if not api_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="API token is required.",
+        )
+
+    if api_token.credentials not in API_TOKENS:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API token",
