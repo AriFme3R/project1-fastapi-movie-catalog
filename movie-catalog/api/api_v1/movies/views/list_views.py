@@ -1,12 +1,15 @@
 from fastapi import (
     APIRouter,
     status,
-    BackgroundTasks,
     Depends,
 )
 
 from api.api_v1.movies.crud import storage
-from api.api_v1.movies.dependencies import save_storage_safe, api_token_required
+from api.api_v1.movies.dependencies import (
+    save_storage_safe,
+    api_token_required,
+    user_basic_auth_required_for_unsafe_methods,
+)
 from schemas.movie import (
     Movie,
     MovieCreate,
@@ -18,7 +21,8 @@ router = APIRouter(
     tags=["Movies"],
     dependencies=[
         Depends(save_storage_safe),
-        Depends(api_token_required),
+        # Depends(api_token_required),
+        Depends(user_basic_auth_required_for_unsafe_methods),
     ],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
