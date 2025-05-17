@@ -1,5 +1,6 @@
-import secrets
 from abc import ABC, abstractmethod
+
+import secrets
 
 
 class AbstractTokensHelper(ABC):
@@ -10,16 +11,26 @@ class AbstractTokensHelper(ABC):
     - генерация нового токена
     """
 
+    """
+    Абстрактный базовый класс для работы с токенами.
+    Определяет контракт для проверки, добавления и генерации токенов.
+    """
+
     @abstractmethod
     def token_exists(
         self,
         token: str,
     ) -> bool:
         """
-        Check if token exists.
-        :param token:
-        :return:
+        Проверяет, существует ли токен в хранилище.
+
+        Args:
+            token (str): Токен для проверки.
+
+        Returns:
+            bool: True, если токен существует, иначе False.
         """
+        pass
 
     @abstractmethod
     def add_token(
@@ -27,16 +38,30 @@ class AbstractTokensHelper(ABC):
         token: str,
     ) -> None:
         """
-        Save token to storage.
-        :param token:
-        :return:
+        Добавляет токен в хранилище.
+
+        Args:
+            token (str): Токен для добавления.
         """
+        pass
 
     @classmethod
     def generate_token(cls) -> str:
+        """
+        Генерирует безопасный случайный токен.
+
+        Returns:
+            str: Сгенерированный токен.
+        """
         return secrets.token_urlsafe(16)
 
     def generate_and_save_token(self) -> str:
+        """
+        Генерирует новый токен и сохраняет его в хранилище.
+
+        Returns:
+            str: Сгенерированный токен.
+        """
         token = self.generate_token()
         self.add_token(token)
         return token
