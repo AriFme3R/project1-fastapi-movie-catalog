@@ -18,10 +18,11 @@ from fastapi.security import (
 
 from core.config import (
     USERS_DB,
-    REDIS_TOKENS_SET_NAME,
 )
 from .crud import storage
-from .redis import redis_tokens
+from api.api_v1.auth.services import (
+    redis_tokens,
+)
 
 from schemas.movie import Movie
 
