@@ -43,7 +43,7 @@ class AbstractUsersHelper(ABC):
         :return: True, если пароли совпадают, иначе False
         """
         db_password = self.get_user_password(username)
-        if db_password in None:
+        if db_password is None:
             return False
         return self.check_passwords_match(
             password1=db_password,
