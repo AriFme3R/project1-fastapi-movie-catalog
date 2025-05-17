@@ -9,14 +9,6 @@ from redis import Redis
 from core import config
 
 
-redis_tokens = Redis(
-    host=config.REDIS_HOST,
-    port=config.REDIS_PORT,
-    db=config.REDIS_DB_FOR_TOKENS,
-    decode_responses=True,
-)
-
-
 class AbstractTokensHelper(ABC):
     """
     Что мне нужно от обертки:
@@ -55,3 +47,42 @@ class AbstractTokensHelper(ABC):
         token = self.generate_token()
         self.add_token(token)
         return token
+
+
+class RedisTokensHelper(AbstractTokensHelper):
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        db: int,
+        tokens_set_name: str,
+    ):
+        self.redis = Redis(
+            host=host,
+            port=port,
+            db=db,
+            decode_responses=True,
+        )
+        self.tokens_set_name = tokens_set_name
+
+    def token_exists(self, token: str) -> bool:
+        return bool(
+            self.redis.sismember(
+                self.tokens_set_name,
+                token,
+            )
+        )
+
+    def add_token(self, token: str) -> None:
+        self.redis.sadd(
+            self.tokens_set_name,
+            token,
+        )
+
+
+redis_tokens = RedisTokensHelper(
+    host=config.REDIS_HOST,
+    port=config.REDIS_PORT,
+    db=config.REDIS_DB_FOR_TOKENS,
+    tokens_set_name=config.REDIS_TOKENS_SET_NAME,
+)
