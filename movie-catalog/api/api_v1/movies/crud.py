@@ -59,8 +59,12 @@ class MoviesStorage(BaseModel):
         movie = Movie(
             **movie.model_dump(),
         )
-        self.slug_to_movie[movie.slug] = movie
-        logger.info("Movie created")
+        redis.hset(
+            name=config.REDIS_MOVIES_HASH_NAME,
+            key=movie.slug,
+            value=movie.model_dump_json(),
+        )
+        logger.info("Movie created %s", movie)
         return movie
 
     def delete_by_slug(self, slug: str) -> None:
