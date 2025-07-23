@@ -60,16 +60,6 @@ def prefetch_movie(
     )
 
 
-def save_storage_safe(
-    request: Request,
-    background_tasks: BackgroundTasks,
-):
-    yield
-    if request.method in UNSAFE_METHOD:
-        logger.info("Add background task to save storage")
-        background_tasks.add_task(storage.save_state)
-
-
 def validate_api_token(
     api_token: HTTPAuthorizationCredentials | None,
 ):
