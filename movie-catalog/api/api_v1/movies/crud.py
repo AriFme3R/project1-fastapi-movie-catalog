@@ -65,13 +65,19 @@ class MoviesStorage(BaseModel):
             key=slug,
         )
 
-    def create(self, movie: MovieCreate) -> Movie:
+    def create(self, movie_in: MovieCreate) -> Movie:
         movie = Movie(
-            **movie.model_dump(),
+            **movie_in.model_dump(),
         )
         self.save_movie(movie)
         logger.info("Movie created %s", movie)
         return movie
+
+    def create_or_raise_if_exists(self, movie_in: MovieCreate) -> Movie:
+        if not self.exists(movie_in.slug):
+            return self.create(movie_in)
+
+        raise MovieAlreadyExists(movie_in.slug)
 
     def delete_by_slug(self, slug: str) -> None:
         redis.hdel(
