@@ -1,8 +1,5 @@
-from fastapi import (
-    APIRouter,
-    status,
-    Depends,
-)
+from fastapi import APIRouter, status, Depends, HTTPException
+from starlette.status import HTTP_409_CONFLICT
 
 from api.api_v1.movies.crud import storage
 from api.api_v1.movies.dependencies import (
@@ -51,4 +48,10 @@ def read_movies_list() -> list[Movie]:
 def create_movie(
     movie_create: MovieCreate,
 ) -> Movie:
-    return storage.create(movie_create)
+    if not storage.get_by_slug(movie_create.slug):
+        return storage.create(movie_create)
+
+    raise HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail=f"Movie with slug={movie_create.slug!r} already exists",
+    )
