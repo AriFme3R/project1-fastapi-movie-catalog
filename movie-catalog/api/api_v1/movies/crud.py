@@ -23,6 +23,18 @@ redis = Redis(
 )
 
 
+class MovieBaseError(Exception):
+    """
+    Base exception for movie CRUD actions.
+    """
+
+
+class MovieAlreadyExists(MovieBaseError):
+    """
+    Raise on movie creation if such slug already exists.
+    """
+
+
 class MoviesStorage(BaseModel):
 
     def save_movie(self, movie: Movie) -> None:
