@@ -1,5 +1,9 @@
-from fastapi import APIRouter, status, Depends, HTTPException
-from starlette.status import HTTP_409_CONFLICT
+from fastapi import (
+    APIRouter,
+    status,
+    Depends,
+    HTTPException,
+)
 
 from api.api_v1.movies.crud import storage
 from api.api_v1.movies.dependencies import (
@@ -44,6 +48,18 @@ def read_movies_list() -> list[Movie]:
     "/",
     response_model=MovieRead,
     status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_409_CONFLICT: {
+            "description": "It is not possible to overwrite an existing record.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Movie with slug='name' already exists",
+                    }
+                }
+            },
+        },
+    },
 )
 def create_movie(
     movie_create: MovieCreate,
