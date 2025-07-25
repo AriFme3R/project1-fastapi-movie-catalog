@@ -45,6 +45,16 @@ class AbstractTokensHelper(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_tokens(self) -> list[str]:
+        """
+        Выводит список всех токенов.
+
+        Returns:
+            list[str]: Список токенов.
+        """
+        pass
+
     @classmethod
     def generate_token(cls) -> str:
         """
