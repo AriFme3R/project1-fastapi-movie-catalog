@@ -35,17 +35,6 @@ class RedisTokensHelper(AbstractTokensHelper):
         )
         self.tokens_set_name = tokens_set_name
 
-    def get_tokens(self) -> list[str]:
-        """
-        Выводит список всех токенов.
-
-        Returns:
-            list[str]: Список токенов.
-        """
-        return list(
-            self.redis.smembers(name=self.tokens_set_name),
-        )
-
     def token_exists(self, token_to_check: str) -> bool:
         """
         Проверяет, существует ли токен в множестве Redis.
@@ -73,6 +62,23 @@ class RedisTokensHelper(AbstractTokensHelper):
         self.redis.sadd(
             self.tokens_set_name,
             token_to_add,
+        )
+
+    def get_tokens(self) -> list[str]:
+        """
+        Выводит список всех токенов.
+
+        Returns:
+            list[str]: Список токенов.
+        """
+        return list(
+            self.redis.smembers(name=self.tokens_set_name),
+        )
+
+    def delete_token(self, token: str) -> None:
+        self.redis.srem(
+            self.tokens_set_name,
+            token,
         )
 
 
