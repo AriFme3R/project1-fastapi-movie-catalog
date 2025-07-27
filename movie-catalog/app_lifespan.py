@@ -1,12 +1,11 @@
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from api.api_v1.movies.crud import storage
-
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # действие до запуска приложения
 
     # ставим эту функцию на паузу

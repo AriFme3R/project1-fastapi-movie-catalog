@@ -1,4 +1,7 @@
+__all__ = ("app",)
+
 from typing import Annotated
+
 
 import typer
 from rich import print
@@ -23,7 +26,7 @@ def check(
             help="The token to check",
         ),
     ],
-):
+) -> None:
     print(
         f"Token - [bold]{token}[/bold]",
         (
@@ -35,14 +38,14 @@ def check(
 
 
 @app.command(name="list", help="Get list of tokens.")
-def list_tokens():
+def list_tokens() -> None:
     print(Markdown("# Available API tokens"))
     print(Markdown("\n- ".join([""] + tokens.get_tokens())))
     print()
 
 
 @app.command(help="Create new token and save it.")
-def create():
+def create() -> None:
     token = tokens.generate_and_save_token()
     print(f"[bold]Token - [green]{token}[/green] successfully created[/bold]")
 
@@ -53,7 +56,7 @@ def add(
         str,
         typer.Argument(help="Token to add"),
     ],
-):
+) -> None:
     if not tokens.token_exists(token):
         tokens.add_token(token_to_add=token)
         print(f"[bold]Token - [green]{token}[/green] added[/bold]")
@@ -68,7 +71,7 @@ def rm(
         str,
         typer.Argument(help="Token to remove"),
     ],
-):
+) -> None:
     if not tokens.token_exists(token):
         print(f"[bold]Token - [red]{token}[/red] does not exist[/bold]")
         return

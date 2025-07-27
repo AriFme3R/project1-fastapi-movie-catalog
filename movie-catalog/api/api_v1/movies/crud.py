@@ -1,3 +1,5 @@
+__all__ = ("storage",)
+
 import logging
 
 from pydantic import (
@@ -60,9 +62,11 @@ class MoviesStorage(BaseModel):
         return None
 
     def exists(self, slug: str) -> bool:
-        return redis.hexists(
-            name=config.REDIS_MOVIES_HASH_NAME,
-            key=slug,
+        return bool(
+            redis.hexists(
+                name=config.REDIS_MOVIES_HASH_NAME,
+                key=slug,
+            )
         )
 
     def create(self, movie_in: MovieCreate) -> Movie:

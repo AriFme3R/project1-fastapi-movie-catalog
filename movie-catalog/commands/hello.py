@@ -1,3 +1,5 @@
+__all__ = ("app",)
+
 from typing import Annotated
 
 import typer
@@ -18,5 +20,5 @@ def hello(
             help="Name to greet",
         ),
     ],
-):
+) -> None:
     print(f"[bold]Hello, [green]{name}[/green]![/bold]")
