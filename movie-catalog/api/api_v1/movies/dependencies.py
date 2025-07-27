@@ -61,7 +61,7 @@ def prefetch_movie(
 
 
 def validate_api_token(
-    api_token: HTTPAuthorizationCredentials | None,
+    api_token: HTTPAuthorizationCredentials,
 ):
     if redis_tokens.token_exists(
         api_token.credentials,

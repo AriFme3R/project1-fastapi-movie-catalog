@@ -17,7 +17,7 @@ class MovieBase(BaseModel):
     title: str
     year: int
     duration: int
-    description: DescriptionString = ""
+    description: DescriptionString
 
 
 class MovieCreate(MovieBase):
@@ -27,6 +27,7 @@ class MovieCreate(MovieBase):
         str,
         Len(min_length=3, max_length=10),
     ]
+    description: DescriptionString = ""
 
 
 class MovieUpdate(MovieBase):
@@ -34,10 +35,8 @@ class MovieUpdate(MovieBase):
     Модель для обновления информации о фильме
     """
 
-    description: DescriptionString
 
-
-class MoviePartialUpdate(MovieBase):
+class MoviePartialUpdate(BaseModel):
     """
     Модель для частичного обновления информации о фильме
     """
