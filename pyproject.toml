@@ -13,6 +13,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "mypy>=1.17.0",
+    "pre-commit>=4.2.0",
     "ruff>=0.12.5",
 ]
 
@@ -120,8 +121,6 @@ select = [
     "FURB", # refurb (FURB)
     "RUF", # Ruff-specific rules (RUF)
     "TRY", # tryceratops (TRY)
-
-
 
 
 ]
