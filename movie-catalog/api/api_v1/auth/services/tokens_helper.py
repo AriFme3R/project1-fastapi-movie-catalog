@@ -29,7 +29,6 @@ class AbstractTokensHelper(ABC):
         Returns:
             bool: True, если токен существует, иначе False.
         """
-        pass
 
     @abstractmethod
     def add_token(
@@ -42,7 +41,6 @@ class AbstractTokensHelper(ABC):
         Args:
             token (str): Токен для добавления.
         """
-        pass
 
     @abstractmethod
     def get_tokens(self) -> list[str]:
@@ -52,7 +50,6 @@ class AbstractTokensHelper(ABC):
         Returns:
             list[str]: Список токенов.
         """
-        pass
 
     @abstractmethod
     def delete_token(
@@ -65,7 +62,6 @@ class AbstractTokensHelper(ABC):
         Args:
          token: str - Токен для удаления.
         """
-        pass
 
     @classmethod
     def generate_token(cls) -> str:

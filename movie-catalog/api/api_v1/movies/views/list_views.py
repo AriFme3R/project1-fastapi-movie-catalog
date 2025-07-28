@@ -4,15 +4,18 @@ from fastapi import (
     HTTPException,
     status,
 )
+
+from api.api_v1.movies.crud import (
+    MovieAlreadyExistsError,
+    storage,
+)
+from api.api_v1.movies.dependencies import (
+    api_token_or_user_basic_auth_required_for_unsafe_methods,
+)
 from schemas.movie import (
     Movie,
     MovieCreate,
     MovieRead,
-)
-
-from api.api_v1.movies.crud import MovieAlreadyExists, storage
-from api.api_v1.movies.dependencies import (
-    api_token_or_user_basic_auth_required_for_unsafe_methods,
 )
 
 router = APIRouter(
@@ -28,8 +31,8 @@ router = APIRouter(
                 "application/json": {
                     "example": {
                         "detail": "Invalid API token or basic auth.",
-                    }
-                }
+                    },
+                },
             },
         },
     },
@@ -55,8 +58,8 @@ def read_movies_list() -> list[Movie]:
                 "application/json": {
                     "example": {
                         "detail": "Movie with slug='name' already exists",
-                    }
-                }
+                    },
+                },
             },
         },
     },
@@ -66,9 +69,8 @@ def create_movie(
 ) -> Movie:
     try:
         return storage.create_or_raise_if_exists(movie_create)
-    except MovieAlreadyExists:
-
+    except MovieAlreadyExistsError as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Movie with slug={movie_create.slug!r} already exists",
-        )
+        ) from e

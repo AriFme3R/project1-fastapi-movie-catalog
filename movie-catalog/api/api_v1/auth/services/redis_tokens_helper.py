@@ -1,9 +1,9 @@
 __all__ = ("redis_tokens",)
 
-from core import config
 from redis import Redis
 
 from api.api_v1.auth.services.tokens_helper import AbstractTokensHelper
+from core import config
 
 
 class RedisTokensHelper(AbstractTokensHelper):
@@ -51,7 +51,7 @@ class RedisTokensHelper(AbstractTokensHelper):
             self.redis.sismember(
                 self.tokens_set_name,
                 token_to_check,
-            )
+            ),
         )
 
     def add_token(self, token_to_add: str) -> None:

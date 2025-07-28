@@ -13,12 +13,12 @@ from fastapi.security import (
     HTTPBasicCredentials,
     HTTPBearer,
 )
-from schemas.movie import Movie
 
 from api.api_v1.auth.services import (
     redis_tokens,
     redis_users,
 )
+from schemas.movie import Movie
 
 from .crud import storage
 
@@ -30,7 +30,7 @@ UNSAFE_METHOD = frozenset(
         "PUT",
         "PATCH",
         "DELETE",
-    ]
+    ],
 )
 
 static_api_token = HTTPBearer(
@@ -132,7 +132,7 @@ def api_token_or_user_basic_auth_required_for_unsafe_methods(
     ] = None,
 ) -> None:
     if request.method not in UNSAFE_METHOD:
-        return
+        return None
 
     if credentials:
         return validate_basic_auth(credentials=credentials)

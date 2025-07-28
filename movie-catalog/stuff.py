@@ -1,5 +1,6 @@
-from core import config
 from redis import Redis
+
+from core import config
 
 redis = Redis(
     host=config.REDIS_HOST,
@@ -20,7 +21,7 @@ def main() -> None:
             redis.get("foo"),
             redis.get("number"),
             redis.get("spam"),
-        ]
+        ],
     )
 
 
