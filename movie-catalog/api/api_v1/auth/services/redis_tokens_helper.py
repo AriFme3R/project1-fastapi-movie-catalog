@@ -18,7 +18,7 @@ class RedisTokensHelper(AbstractTokensHelper):
         port: int,
         db: int,
         tokens_set_name: str,
-    ):
+    ) -> None:
         """
         Инициализирует соединение с Redis
         и задаёт имя множества для токенов.
