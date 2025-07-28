@@ -2,17 +2,16 @@ __all__ = ("storage",)
 
 import logging
 
+from core import config
 from pydantic import (
     BaseModel,
 )
 from redis import Redis
-
-from core import config
 from schemas.movie import (
     Movie,
     MovieCreate,
-    MovieUpdate,
     MoviePartialUpdate,
+    MovieUpdate,
 )
 
 logger = logging.getLogger(__name__)
