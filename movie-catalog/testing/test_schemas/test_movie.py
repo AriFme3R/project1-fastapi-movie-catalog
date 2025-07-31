@@ -28,7 +28,7 @@ class MovieCreateTestCase(TestCase):
 
 class MovieUpdateTestCase(TestCase):
     def test_movie_can_be_updated_from_update_schema(self) -> None:
-        update_data = MovieUpdate(
+        movie_in = MovieUpdate(
             title="some-title",
             year=2025,
             duration=90,
@@ -36,11 +36,11 @@ class MovieUpdateTestCase(TestCase):
         )
 
         movie = Movie(
-            **update_data.model_dump(),
+            **movie_in.model_dump(),
             slug="some-slug",
         )
 
-        self.assertEqual(update_data.title, movie.title)
-        self.assertEqual(update_data.year, movie.year)
-        self.assertEqual(update_data.duration, movie.duration)
-        self.assertEqual(update_data.description, movie.description)
+        self.assertEqual(movie_in.title, movie.title)
+        self.assertEqual(movie_in.year, movie.year)
+        self.assertEqual(movie_in.duration, movie.duration)
+        self.assertEqual(movie_in.description, movie.description)
