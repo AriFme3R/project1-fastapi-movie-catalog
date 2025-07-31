@@ -26,6 +26,29 @@ class MovieCreateTestCase(TestCase):
         self.assertEqual(movie_in.duration, movie.duration)
         self.assertEqual(movie_in.description, movie.description)
 
+    def test_movie_create_accepts_different_slugs(self) -> None:
+        slugs = [
+            "avengers",
+            "abc",
+            "r",
+            "matrix",
+            "interstellar",
+        ]
+        for slug in slugs:
+            with self.subTest(slug=slug, msg=f"test-slug-{slug}"):
+                movie_create = MovieCreate(
+                    slug=slug,
+                    title="some-title",
+                    year=2025,
+                    duration=90,
+                    description="some-description",
+                )
+
+                self.assertEqual(
+                    slug,
+                    movie_create.slug,
+                )
+
 
 class MovieUpdateTestCase(TestCase):
     def test_movie_can_be_updated_from_update_schema(self) -> None:
