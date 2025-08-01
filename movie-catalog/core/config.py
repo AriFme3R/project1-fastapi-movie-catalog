@@ -13,7 +13,7 @@ LOG_FORMAT = (
 
 
 REDIS_HOST = "localhost"
-REDIS_PORT = int(getenv("REDIS_PORT", "0")) or 6379
+REDIS_PORT = int(getenv("REDIS_PORT", 0)) or 6379  # noqa: PLW1508
 REDIS_DB = 0
 REDIS_DB_FOR_TOKENS = 1
 REDIS_DB_FOR_USERS = 2
